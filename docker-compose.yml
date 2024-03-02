@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: password
   web:
     build: .
-    command: bash -c "sleep 10 && python manage.py makemigrations &&
+    command: bash -c "sleep 5 && python manage.py makemigrations &&
         python manage.py migrate &&
         echo 'from django.contrib.auth.models import User; User.objects.create_superuser(username=\"admin\", email=\"admin@example.com\", password=\"admin\")' | python manage.py shell &&
         python manage.py runserver 0.0.0.0:8000"
