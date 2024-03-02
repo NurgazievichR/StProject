@@ -1,7 +1,7 @@
 from rest_framework import routers
 
-from establishment.views import EstablishmentViewSet
-from product.views import ProductViewSet
+from apps.establishment.views import EstablishmentViewSet
+from apps.product.views import ProductViewSet
 
 router = routers.DefaultRouter()
 router.register('product', ProductViewSet)
