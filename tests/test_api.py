@@ -2,7 +2,7 @@ import pytest
 import requests
 
 ESTABLISHMENT_URL = "http://0.0.0.0:8000/api/v1/establishment/"
-PRODUCT_URL = "http://0.0.0.0:8000/api/v1/products/"
+PRODUCT_URL = "http://0.0.0.0:8000/api/v1/product/"
 
 @pytest.fixture
 def EstablishmentSample():
@@ -41,5 +41,47 @@ def testDELETEEstablishment(EstablishmentSample):
 
     try:
         response = requests.get(ESTABLISHMENT_URL + str(response.json()["id"]) + "/")
+    except:
+        assert True
+
+
+
+@pytest.fixture
+def ProductSample():
+    return {"name": "Test Product", "price": 123, "quantity": 8, "description":"some description about Product"}
+
+
+def test_CREATEProduct(ProductSample):
+    response = requests.post(PRODUCT_URL, json=ProductSample)
+    assert response.status_code == 201 
+    assert response.json()["name"] == ProductSample["name"]
+
+def test_GETProduct(ProductSample):
+    response = requests.post(PRODUCT_URL, json=ProductSample)
+    assert response.status_code == 201
+
+    response = requests.get(PRODUCT_URL + str(response.json()["id"]) + "/")
+    assert response.status_code == 200
+    assert response.json()["name"] == ProductSample["name"]
+
+
+def testUPDATEProduct(ProductSample):
+    response = requests.post(PRODUCT_URL, json=ProductSample)
+    assert response.status_code == 201
+
+    updatedData = {"name": "Test ProductUpdate", "price": 123, "quantity": 8, "description":"some description about Product"}
+    response = requests.put(PRODUCT_URL + str(response.json()["id"]) + "/", json=updatedData)
+    assert response.status_code == 200
+    assert response.json()["name"] == updatedData["name"]
+
+def testDELETEProduct(ProductSample):
+    response = requests.post(PRODUCT_URL, json=ProductSample)
+    assert response.status_code == 201
+
+    response = requests.delete(PRODUCT_URL + str(response.json()["id"]) + "/")
+    assert response.status_code == 204
+
+    try:
+        response = requests.get(PRODUCT_URL + str(response.json()["id"]) + "/")
     except:
         assert True
